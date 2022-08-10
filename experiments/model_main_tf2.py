@@ -29,6 +29,12 @@ python model_main_tf2.py -- \
 """
 from absl import flags
 import tensorflow.compat.v2 as tf
+physical_devices = tf.config.experimental.list_physical_devices('GPU')
+try:
+  tf.config.experimental.set_memory_growth(physical_devices[0], True)
+except:
+  print('Invalid device or cannot modify virtual devices once initialized.')
+  pass
 from object_detection import model_lib_v2
 
 flags.DEFINE_string('pipeline_config_path', None, 'Path to pipeline config '
@@ -37,21 +43,21 @@ flags.DEFINE_integer('num_train_steps', None, 'Number of train steps.')
 flags.DEFINE_bool('eval_on_train_data', False, 'Enable evaluating on train '
                   'data (only supported in distributed training).')
 flags.DEFINE_integer('sample_1_of_n_eval_examples', None, 'Will sample one of '
-                     'every n eval input examples, where n is provided.')
+                      'every n eval input examples, where n is provided.')
 flags.DEFINE_integer('sample_1_of_n_eval_on_train_examples', 5, 'Will sample '
-                     'one of every n train input examples for evaluation, '
-                     'where n is provided. This is only used if '
-                     '`eval_training_data` is True.')
+                      'one of every n train input examples for evaluation, '
+                      'where n is provided. This is only used if '
+                      '`eval_training_data` is True.')
 flags.DEFINE_string(
     'model_dir', None, 'Path to output model directory '
-                       'where event and checkpoint files will be written.')
+                        'where event and checkpoint files will be written.')
 flags.DEFINE_string(
     'checkpoint_dir', None, 'Path to directory holding a checkpoint.  If '
     '`checkpoint_dir` is provided, this binary operates in eval-only mode, '
     'writing resulting metrics to `model_dir`.')
 
 flags.DEFINE_integer('eval_timeout', 60, 'Number of seconds to wait for an'
-                     'evaluation checkpoint before exiting.')
+                      'evaluation checkpoint before exiting.')
 
 flags.DEFINE_bool('use_tpu', False, 'Whether the job is executing on a TPU.')
 flags.DEFINE_string(
@@ -65,7 +71,7 @@ flags.DEFINE_integer(
 flags.DEFINE_integer(
     'checkpoint_every_n', 2000, 'Integer defining how often we checkpoint.')
 flags.DEFINE_boolean('record_summaries', True,
-                     ('Whether or not to record summaries during'
+                      ('Whether or not to record summaries during'
                       ' training.'))
 
 FLAGS = flags.FLAGS
