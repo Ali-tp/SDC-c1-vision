@@ -7,3 +7,7 @@ pretrained_model
 nvvm/
 *.data-00000-of-00001
 train/
+*.index
+checkpoint
+eval/
+exported/
